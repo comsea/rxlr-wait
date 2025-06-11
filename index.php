@@ -1,93 +1,148 @@
+<?php
+// Traitement du formulaire
+$success = false;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nom     = strip_tags($_POST['nom'] ?? '');
+    $prenom  = strip_tags($_POST['prenom'] ?? '');
+    $tel     = strip_tags($_POST['telephone'] ?? '');
+    $email   = strip_tags($_POST['email'] ?? '');
+    $sujet   = strip_tags($_POST['sujet'] ?? '');
+    $message = strip_tags($_POST['message'] ?? '');
+
+    $to      = 'test@gmail.com';
+    $subject = "Formulaire site en construction : $sujet";
+    $body    = "Nom: $nom\nPrénom: $prenom\nTéléphone: $tel\nE-mail: $email\n\n$message";
+    $headers = "From: $email\r\nReply-To: $email\r\n";
+
+    if (mail($to, $subject, $body, $headers)) {
+        $success = true;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RXLR - Site en construction</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Site en construction</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome pour les icônes -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-pzw0+6lZkO0Y5tU6h+1WqXx+N0hXkg4t8l2cOfH+8Jbxxa4K3G+6Gy0ojYZ+ygYJwQLT06S3jFj2FwP7x5KbbA=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer" />
 </head>
 
-<body class="bg-gray-100 h-screen w-screen overflow-auto">
+<body class="relative w-screen h-screen flex items-center justify-center">
+    <img class="absolute top-0 right-0 -z-10" src="./rectangle-red.png" alt="">
 
-    <div class="w-full h-full">
-        <!-- Partie haute -->
-        <div class="flex flex-row h-2/3">
-            <!-- Image principale avec superposition -->
-            <div class="relative w-1/2">
-                <img class="object-cover w-full h-full" src="./img.png" alt="image principale">
-                <img class="absolute w-1/2 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" src="./1.png" alt="image superposée">
+    <div class="w-full h-full overflow-hidden grid grid-cols-1 lg:grid-cols-2 z-10">
+
+        <!-- Gauche : logo + formulaire -->
+        <div class="p-8 space-y-6 flex flex-col justify-around items-center">
+            <!-- Logo -->
+            <div class="flex justify-center">
+                <img src="./logo.png" alt="Logo R XLR" class="w-3/4">
             </div>
-            <!-- Bloc rouge à droite -->
-            <div class="w-1/2 flex flex-col justify-center items-center">
-                <div class="p-4 w-3/4">
-                    <h2 class="text-3xl text-[#4FB89C] font-bold mb-4">Un projet ? Une question ? <br>
-                        Contactez-nous !</h2>
-                    <form class="flex flex-col gap-4">
-                        <div class="flex gap-4">
-                            <input type="text" placeholder="Prénom" class="p-2 border rounded w-full">
-                            <input type="text" placeholder="Nom" class="p-2 border rounded w-full">
-                        </div>
-                        <div class="flex gap-4">
-                            <input type="email" placeholder="Email" class="p-2 border rounded w-full">
-                            <input type="tel" placeholder="Téléphone" class="p-2 border rounded w-full">
-                        </div>
-                        <textarea placeholder="Votre message" class="p-2 border rounded w-full h-32 resize-none"></textarea>
-                        <div>
-                            <input type="checkbox" name="checkbox" id="checkbox">
-                            <span>En soumettant ce formulaire, j'accepte que les informations saisies soient exploitées dans le cadre de la demande de contact et de la relation commerciale qui peut en découler.
-                                * Champs obligatoires</span>
-                        </div>
-                        <button class="rounded-full bg-[#4FB89C] py-2 px-8 text-white w-min" type="submit">Envoyer</button>
-                    </form>
 
+            <div class="w-full bg-[#F5F5F5] p-4 rounded-lg">
+                <!-- Titre -->
+                <div class="flex mb-10 justify-center items-center">
+                    <img class="h-16" src="./personnage.png" alt="">
+                    <h2 class="text-xl font-semibold">Site en construction</h2>
                 </div>
+
+                <!-- Formulaire -->
+                <?php if ($success): ?>
+                    <div class="p-4 bg-green-100 text-green-800">
+                        Merci ! Votre message a bien été envoyé.
+                    </div>
+                <?php endif; ?>
+
+                <form action="" method="POST" class="space-y-4 w-full">
+                    <div class="flex space-x-4">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700">Nom</label>
+                            <input type="text" name="nom" required class="h-10 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700">Prénom</label>
+                            <input type="text" name="prenom" required class="h-10 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                        </div>
+                    </div>
+                    <div class="flex space-x-4">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700">Téléphone</label>
+                            <input type="tel" name="telephone" class="h-10 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700">E-mail</label>
+                            <input type="email" name="email" required class="h-10 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Sujet</label>
+                        <input type="text" name="sujet" class="h-10 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Message</label>
+                        <textarea name="message" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"></textarea>
+                    </div>
+                    <button type="submit"
+                        class="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-md transition">
+                        Envoyer
+                    </button>
+                </form>
             </div>
         </div>
 
-        <!-- Partie basse -->
-        <div class="flex flex-row h-1/3">
-            <!-- Carte Google Maps -->
-            <div class="w-1/2 flex justify-center items-center bg-[#4FB89C]">
-                <iframe class="h-full w-full p-16 rounded-lg"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5157.916798375992!2d4.8395045528073775!3d49.73040833585466!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47ea6d15865bb89b%3A0x4c893f94e81c4d61!2sAP%20FERMETURES%20JACQUEMARD!5e0!3m2!1sfr!2sfr!4v1749463795569!5m2!1sfr!2sfr"
-                    style="border:0;" allowfullscreen="" loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <!-- Droite : image + coordonnées -->
+        <div class="flex flex-col justify-center items-center p-8 space-y-6">
+            <!-- Header image -->
+            <div class="rounded-lg overflow-hidden">
+                <img src="./magasin.png" alt="Photo du magasin" class="w-full object-cover">
             </div>
 
-            <!-- Informations de contact -->
-            <div class="w-1/2 flex justify-center items-center bg-[#FFF5AB]">
-                <div class="grid grid-cols-2 gap-16">
-                    <div>
-                        <h2 class="text-[#4FB89C] text-3xl font-bold">Nous trouver</h2>
-                        <a class="text-[#4FB89C]" href="https://maps.google.com/?q=Z-A 13 RUE DES CUBILOTS 08330 VRIGNE-AUX-BOIS" target="_blank">
-                            Z-A 13 RUE DES CUBILOTS 08330 VRIGNE-AUX-BOIS
+            <div class="bg-[#F5F5F5] p-4 flex flex-col gap-6 w-full rounded-lg">
+                <!-- Coordonnées -->
+                <div class="w-full p-6 flex flex-col items-center">
+                    <h2 class="text-2xl font-bold mb-4">Nos coordonnées</h2>
+                    <div class="grid grid-cols-2 gap-8">
+                        <!-- Adresse cliquable vers Google Maps -->
+                        <a
+                            href="https://www.google.com/maps/search/?api=1&query=zac+08200+Glaire"
+                            target="_blank"
+                            class="flex items-center gap-2 hover:underline">
+                            <img class="h-6" src="./location.png" alt="location">
+                            <span>zac , 08200, Glaire</span>
+                        </a>
+
+                        <!-- Horaires restés en simple div -->
+                        <div class="flex items-center gap-2">
+                            <img class="h-6" src="./clock.png" alt="horaire">
+                            <span>Lundi à Vendredi<br>08h - 12h 14h - 17h</span>
+                        </div>
+
+                        <!-- Téléphone cliquable en tel: -->
+                        <a href="tel:+33324265321" class="flex items-center gap-2 hover:underline">
+                            <img class="h-6" src="./tel.png" alt="téléphone">
+                            <span>03 24 26 53 21</span>
                         </a>
                     </div>
-                    <div>
-                        <h2 class="text-[#4FB89C] text-3xl font-bold">Nos horaires</h2>
-                        <p class="text-[#4FB89C]">Lundi au vendredi<br>
-                            de 9h à 12h et de 14h à 17h
-                        </p>
-                    </div>
-                    <div>
-                        <h2 class="text-[#4FB89C] text-3xl font-bold">Nous appeler</h2>
-                        <a class="text-[#4FB89C]" href="tel:0324521696">03 24 52 16 96</a>
-                    </div>
-                    <div>
-                        <h2 class="text-[#4FB89C] text-3xl font-bold">Nous suivre</h2>
-                        <div class="flex flex-row gap-2">
-                            <a href="https://www.facebook.com" target="_blank" aria-label="Facebook">
-                                <img class="w-10" src="./facebook.png" alt="logo Facebook">
-                            </a>
-                            <a href="https://www.linkedin.com" target="_blank" aria-label="LinkedIn">
-                                <img class="w-10" src="./linkedin.png" alt="logo LinkedIn">
-                            </a>
-                        </div>
-                    </div>
+
+                </div>
+
+                <!-- Plan -->
+                <div class="w-full rounded-lg overflow-hidden shadow">
+                    <iframe class="w-full object-cover h-48" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2580.5515281019348!2d4.9072252!3d49.700417699999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47ea6c2a9f46fb17%3A0x8820812008f23109!2sRXLR!5e0!3m2!1sfr!2sfr!4v1749626048538!5m2!1sfr!2sfr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
         </div>
+
     </div>
 
 </body>
